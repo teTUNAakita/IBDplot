@@ -60,8 +60,6 @@ REP = 100
 K0_tmp = K1_tmp = rep(0,REP)
 for (i in 1: REP){
   cat("rep =",i,"\n")
-  #locus_number = 500
-  #error_rate = 0.1
   INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_po kinfer_po.c"
   system(INLINE1)
   INLINE2 = paste0("./kinfer_po ",locus_number," ",error_rate)
@@ -100,14 +98,12 @@ points(K0_tmp, K1_tmp, xlim=c(0,1), ylim=c(0,1), pch = 20, col="red")
 #title(main = paste0("locus_number = ",locus_number,"\n error_rate = ",error_rate))
 #hist(K1_tmp)
 #######################
-# PO
+# HS
 #######################
 REP = 100
 K0_tmp = K1_tmp = rep(0,REP)
 for (i in 1: REP){
   cat("rep =",i,"\n")
-  #locus_number = 500
-  #error_rate = 0.1
   INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hsp kinfer_hsp.c"
   system(INLINE1)
   INLINE2 = paste0("./kinfer_hsp ",locus_number," ",error_rate)
