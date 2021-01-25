@@ -55,29 +55,15 @@ int main( int argc, char *argv[] ) {
     unsigned int allele_p3[ 2 ] ; //A5A6
 
     double AF ;
-    // E3
-    // 33% -> 0.075
-    // 43% -> 0.15
-    // 12% -> 0.25
-    // 7%  -> 0.35
-    // 5%  -> 0.45
-
-    // L1
-    // 0.46	0.39	0.09	0.03	0.03
-    // 46% -> 0.075
-    // 39% -> 0.15
-    // 9%  -> 0.25
-    // 3%  -> 0.35
-    // 3%  -> 0.45
     double SFS[ 4 ] ;
     SFS[0] = 0.675 ;
     SFS[1] = 0.325 ;
     SFS[2] = 0.0 ;
     SFS[3] = 0.0 ;
-    double freq_threshold[ 5 ] ;
+    double freq_threshold[ 4 ] ;
     freq_threshold[0] = 0.125 ;
     freq_threshold[1] = 0.25 ;
-    freq_threshold[2] = 0.37.5 ;
+    freq_threshold[2] = 0.375 ;
     freq_threshold[3] = 0.5 ;
 
     double ran_AF = gsl_rng_uniform ( r ) ;
