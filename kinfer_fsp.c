@@ -48,11 +48,11 @@ int main( int argc, char *argv[] ) {
   for ( int i = 0; i < maker_number; i++ ) {
 
     // p1 -- p2 -> c1
-    // p1 -- p3 -> c2
+    // p1 -- p2 -> c2
+    // compare c1 vs c2
 
     unsigned int allele_p1[ 2 ] ; //A1A2
     unsigned int allele_p2[ 2 ] ; //A3A4
-    unsigned int allele_p3[ 2 ] ; //A5A6
 
     double AF ;
     double SFS[ 4 ] ;
@@ -96,15 +96,6 @@ int main( int argc, char *argv[] ) {
       }
       if (debug) printf ( "%d\n", allele_p2[ a ] ) ;
     }
-    if (debug) printf ("== p3 == \n") ;
-    for ( int a = 0; a < 2; a++ ) {
-      if ( gsl_rng_uniform ( r ) < AF ) { // allele type is 1 or 2
-        allele_p3[ a ] = 1 ;
-      } else {
-        allele_p3[ a ] = 0 ;
-      }
-      if (debug) printf ( "%d\n", allele_p3[ a ] ) ;
-    }
 
     unsigned int allele_c1[ 2 ] ;
     double rand = gsl_rng_uniform ( r ) ;
@@ -136,16 +127,16 @@ int main( int argc, char *argv[] ) {
     rand = gsl_rng_uniform ( r ) ;
     if ( rand < 0.25 ) {
       allele_c2[ 0 ] = allele_p1[ 0 ] ;
-      allele_c2[ 1 ] = allele_p3[ 0 ] ;
+      allele_c2[ 1 ] = allele_p2[ 0 ] ;
     } else if ( rand < 0.5 ) {
       allele_c2[ 0 ] = allele_p1[ 0 ] ;
-      allele_c2[ 1 ] = allele_p3[ 1 ] ;
+      allele_c2[ 1 ] = allele_p2[ 1 ] ;
     } else if ( rand < 0.75 ) {
       allele_c2[ 0 ] = allele_p1[ 1 ] ;
-      allele_c2[ 1 ] = allele_p3[ 0 ] ;
+      allele_c2[ 1 ] = allele_p2[ 0 ] ;
     } else {
       allele_c2[ 0 ] = allele_p1[ 1 ] ;
-      allele_c2[ 1 ] = allele_p3[ 1 ] ;
+      allele_c2[ 1 ] = allele_p2[ 1 ] ;
     }
 
     for ( int a = 0; a < 2; a++ ) {
@@ -186,9 +177,9 @@ int main( int argc, char *argv[] ) {
     //--- save ---
     FILE *fp ;
     if ( i == 0 ) {
-      fp = fopen ( "hsp.txt", "w" ) ;
+      fp = fopen ( "fsp.txt", "w" ) ;
     } else {
-      fp = fopen ( "hsp.txt", "a" ) ;
+      fp = fopen ( "fsp.txt", "a" ) ;
     }
     fprintf ( fp, "%d\t%d\n", G1, G2) ;
     fclose ( fp ) ;

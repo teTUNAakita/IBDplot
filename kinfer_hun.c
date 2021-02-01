@@ -1,16 +1,16 @@
 /*--------------------------------------------------------
  Mar.3, 2020
- Simulate genotype data of HSP for "Relate"
+ Simulate genotype data of HUN for "Relate"
 
  NOTE:
 
  [MISC]
- 200428 Including SFS
- 200303 Start coding
+ 210201 Including SFS
+ 203010 Start coding
 
  [Operation]
- gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hsp kinfer_hsp.c
-./kinfer_hsp [maker_number] [error_rate]
+ gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hun kinfer_hun.c
+./kinfer_hun [maker_number] [error_rate]
  --------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +39,6 @@ int main( int argc, char *argv[] ) {
 
   const int maker_number =      atoi(argv[1]) ; //1
   const double error_rate =     atof(argv[2]) ; //2
-  //const int ind_number =        atoi(argv[1]) ; //3
 
   printf ( "maker_number = %d, error_rate = %.5f\n", maker_number, error_rate) ;
   unsigned int G1 = 0 ;
@@ -49,10 +48,13 @@ int main( int argc, char *argv[] ) {
 
     // p1 -- p2 -> c1
     // p1 -- p3 -> c2
+    // c2 -- p4 -> c3
+    // compare c1 vs c3
 
     unsigned int allele_p1[ 2 ] ; //A1A2
     unsigned int allele_p2[ 2 ] ; //A3A4
     unsigned int allele_p3[ 2 ] ; //A5A6
+    unsigned int allele_p4[ 2 ] ; //A7A8
 
     double AF ;
     double SFS[ 4 ] ;
@@ -104,6 +106,15 @@ int main( int argc, char *argv[] ) {
         allele_p3[ a ] = 0 ;
       }
       if (debug) printf ( "%d\n", allele_p3[ a ] ) ;
+    }
+    if (debug) printf ("== p4 == \n") ;
+    for ( int a = 0; a < 2; a++ ) {
+      if ( gsl_rng_uniform ( r ) < AF ) { // allele type is 1 or 2
+        allele_p4[ a ] = 1 ;
+      } else {
+        allele_p4[ a ] = 0 ;
+      }
+      if (debug) printf ( "%d\n", allele_p4[ a ] ) ;
     }
 
     unsigned int allele_c1[ 2 ] ;
@@ -157,8 +168,38 @@ int main( int argc, char *argv[] ) {
         }
       }
     }
+
+    unsigned int allele_c3[ 2 ] ;
+    rand = gsl_rng_uniform ( r ) ;
+    if ( rand < 0.25 ) {
+      allele_c3[ 0 ] = allele_c2[ 0 ] ;
+      allele_c3[ 1 ] = allele_p4[ 0 ] ;
+    } else if ( rand < 0.5 ) {
+      allele_c3[ 0 ] = allele_c2[ 0 ] ;
+      allele_c3[ 1 ] = allele_p4[ 1 ] ;
+    } else if ( rand < 0.75 ) {
+      allele_c3[ 0 ] = allele_c2[ 1 ] ;
+      allele_c3[ 1 ] = allele_p4[ 0 ] ;
+    } else {
+      allele_c3[ 0 ] = allele_c2[ 1 ] ;
+      allele_c3[ 1 ] = allele_p4[ 1 ] ;
+    }
+
+    for ( int a = 0; a < 2; a++ ) {
+      if ( gsl_rng_uniform ( r ) < (error_rate) ) {
+        if ( allele_c3[ a ] == 0 )  {
+          allele_c3[ a ] = 1 ;
+        } else {
+          allele_c3[ a ] = 0 ;
+        }
+      }
+    }
+
+
+
     if (debug) printf("c1: %d%d\n", allele_c1[ 0 ],allele_c1[ 1 ]) ;
     if (debug) printf("c2: %d%d\n", allele_c2[ 0 ],allele_c2[ 1 ]) ;
+    if (debug) printf("c3: %d%d\n", allele_c3[ 0 ],allele_c3[ 1 ]) ;
 
     G1 = 0 ;
     G2 = 0 ;
@@ -174,9 +215,9 @@ int main( int argc, char *argv[] ) {
       G1 = 1 ;
     }
 
-    if ( (allele_c2[ 0 ] == 0)&&(allele_c2[ 1 ] == 0) ) {
+    if ( (allele_c3[ 0 ] == 0)&&(allele_c3[ 1 ] == 0) ) {
       G2 = 0 ;
-    } else if ( (allele_c2[ 0 ] == 1)&&(allele_c2[ 1 ] == 1) ) {
+    } else if ( (allele_c3[ 0 ] == 1)&&(allele_c3[ 1 ] == 1) ) {
       G2 = 2 ;
     } else {
       G2 = 1 ;
@@ -186,21 +227,12 @@ int main( int argc, char *argv[] ) {
     //--- save ---
     FILE *fp ;
     if ( i == 0 ) {
-      fp = fopen ( "hsp.txt", "w" ) ;
+      fp = fopen ( "hun.txt", "w" ) ;
     } else {
-      fp = fopen ( "hsp.txt", "a" ) ;
+      fp = fopen ( "hun.txt", "a" ) ;
     }
     fprintf ( fp, "%d\t%d\n", G1, G2) ;
     fclose ( fp ) ;
-
-    FILE *fp1 ;
-    if ( i == 0 ) {
-      fp1 = fopen ( "AF.txt", "w" ) ;
-    } else {
-      fp1 = fopen ( "AF.txt", "a" ) ;
-    }
-    fprintf ( fp1, "%.3f\n", AF) ;
-    fclose ( fp1 ) ;
   }
 
   progress_time = difftime ( time(NULL), start_time ) ;
@@ -209,6 +241,6 @@ int main( int argc, char *argv[] ) {
 }
 //------------------------------------------------------------------------------------------
 int usage ( ) {
-  fprintf ( stderr, "usage: kinfer_hsp maker_number error_rate\n" );
+  fprintf ( stderr, "usage: kinfer_hun maker_number error_rate\n" );
   exit ( 1 ) ;
 }
