@@ -11,7 +11,7 @@ library(SNPRelate)
 #######################
 # UNR (Unrelated)
 #######################
-locus_number = 2500
+locus_number = 1000
 error_rate = 0.01
 REP = 1000
 K0_tmp = K1_tmp = rep(0,REP)
@@ -57,7 +57,7 @@ title(main = paste0("locus_number = ",locus_number,"\n error_rate = ",error_rate
 #######################
 # PO (Parent-Ofspring)
 #######################
-if(0){
+if(1){
   REP = 50
   K0_tmp = K1_tmp = rep(0,REP)
   for (i in 1: REP){
@@ -93,7 +93,7 @@ if(0){
     
   }
   #save(list=ls(),file = paste0("res_po.Rdata"))
-  points(K0_tmp, K1_tmp, xlim=c(0,1), ylim=c(0,1), pch = 20, col="red")
+  points(K0_tmp, K1_tmp, xlim=c(0,1), ylim=c(0,1), pch = 20, col="yellow")
 }
 
 #######################
