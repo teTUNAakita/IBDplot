@@ -1,4 +1,9 @@
+# Currently, M1 chip does not work in R using complex linker in C
+# Compile each c codes from terminal not via system() in R
+
 setwd("~/git/IBDplot/")
+# "./compile.sh" from terminal!!
+
 if (!requireNamespace("BiocManager", quietly=TRUE))
   install.packages("BiocManager")
 BiocManager::install("SNPRelate")
@@ -11,14 +16,15 @@ library(SNPRelate)
 #######################
 # UNR (Unrelated)
 #######################
-locus_number = 1000
+locus_number = 110
 error_rate = 0.01
-REP = 1000
+REP = 50
 K0_tmp = K1_tmp = rep(0,REP)
+#INLINE = "gcc -I/opt/homebrew/Cellar/gsl/2.7/include -L/opt/homebrew/Cellar/gsl/2.7/lib -lgsl -lgslcblas -Wall -o"
 for (i in 1: REP){
   cat("rep =",i,"\n")
-  INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_unr kinfer_unr.c"
-  system(INLINE1)
+  #INLINE1 = paste0(INLINE," kinfer_unr kinfer_unr.c")
+  #system(INLINE1)
   INLINE2 = paste0("./kinfer_unr ",locus_number," ",error_rate)
   system(INLINE2)
   tmp = read.delim("unr.txt",header = F)
@@ -62,8 +68,8 @@ if(1){
   K0_tmp = K1_tmp = rep(0,REP)
   for (i in 1: REP){
     cat("rep =",i,"\n")
-    INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_po kinfer_po.c"
-    system(INLINE1)
+    #INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_po kinfer_po.c"
+    #system(INLINE1)
     INLINE2 = paste0("./kinfer_po ",locus_number," ",error_rate)
     system(INLINE2)
     tmp = read.delim("po.txt",header = F)
@@ -103,8 +109,8 @@ REP = 50
 K0_tmp = K1_tmp = rep(0,REP)
 for (i in 1: REP){
   cat("rep =",i,"\n")
-  INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hsp kinfer_hsp.c"
-  system(INLINE1)
+  #INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hsp kinfer_hsp.c"
+  #system(INLINE1)
   INLINE2 = paste0("./kinfer_hsp ",locus_number," ",error_rate)
   system(INLINE2)
   tmp = read.delim("hsp.txt",header = F)
@@ -143,8 +149,8 @@ REP = 50
 K0_tmp = K1_tmp = rep(0,REP)
 for (i in 1: REP){
   cat("rep =",i,"\n")
-  INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_fsp kinfer_fsp.c"
-  system(INLINE1)
+  #INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_fsp kinfer_fsp.c"
+  #system(INLINE1)
   INLINE2 = paste0("./kinfer_fsp ",locus_number," ",error_rate)
   system(INLINE2)
   tmp = read.delim("fsp.txt",header = F)
@@ -183,8 +189,8 @@ REP = 50
 K0_tmp = K1_tmp = rep(0,REP)
 for (i in 1: REP){
   cat("rep =",i,"\n")
-  INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hun kinfer_hun.c"
-  system(INLINE1)
+  #INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hun kinfer_hun.c"
+  #system(INLINE1)
   INLINE2 = paste0("./kinfer_hun ",locus_number," ",error_rate)
   system(INLINE2)
   tmp = read.delim("hun.txt",header = F)
@@ -223,8 +229,8 @@ REP = 50
 K0_tmp = K1_tmp = rep(0,REP)
 for (i in 1: REP){
   cat("rep =",i,"\n")
-  INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hsc kinfer_hsc.c"
-  system(INLINE1)
+  #INLINE1 = "gcc -DHAVE_INLINE -lgsl -lm -lgslcblas  -Wall -o kinfer_hsc kinfer_hsc.c"
+  #system(INLINE1)
   INLINE2 = paste0("./kinfer_hsc ",locus_number," ",error_rate)
   system(INLINE2)
   tmp = read.delim("hsc.txt",header = F)
